@@ -1,0 +1,33 @@
+version: '3'
+
+networks:
+  my_network:
+
+services:
+  elasticsearch:
+    image: elasticsearch:7.17.0
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - my_network  # Ajoute le conteneur au réseau personnalisé
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - elasticsearch
+    networks:
+      - my_network  # Ajoute le conteneur au même réseau
+
+volumes:
+  esdata:
+  grafana-storage:
+

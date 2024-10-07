@@ -1,0 +1,33 @@
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9095
+
+ingester:
+  lifecycler:
+    ring:
+      kvstore:
+        store: inmemory
+
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      schema: v11
+      index:
+        prefix: loki_index_
+        period: 24h
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /data/loki/index
+
+  filesystem:
+    directory: /data/loki/chunks
+
+compactor:
+  working_directory: /data/loki/compactor
+  shared_store: filesystem
+
+limits_config:
+  # max_cache_freshness_per_stream est à supprimer
+
